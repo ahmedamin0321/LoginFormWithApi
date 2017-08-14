@@ -1,0 +1,96 @@
+<html>
+    <head>
+        <title>Login with api</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <style>
+            .loader {
+                border: 16px solid #f3f3f3;
+                border-top: 16px solid #3498db;
+                border-radius: 50%;
+                width: 120px;
+                height: 120px;
+                animation: spin 2s linear infinite;
+            }
+
+            body{padding-top:20px;}
+
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Loader -->
+        <div class="loader"></div>
+
+
+        <!-- Login Form -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Please sign in</h3>
+                        </div>
+                        
+                        <!-- Alert Box -->
+                        <div class="alert messagediv margin-top-x hidden">
+                            <strong></strong>
+                        </div>
+
+                        <div class="panel-body">
+                            <form accept-charset="UTF-8" role="form">
+                                <fieldset>
+                                    <div class="form-group">
+                                        <input class="form-control" placeholder="E-mail" id="email" type="text">
+                                    </div>
+                                    <div class="form-group">
+                                        <input class="form-control" placeholder="Password" id="password" type="password" value="">
+                                    </div>  
+                                    <input class="btn btn-lg btn-success btn-block" type="button" id="btnLogin" value="Login">
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="js/jquery-2.2.4.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                
+//                Loader will be shownig on ajax call
+                $('.loader')
+                        .hide()
+                        .ajaxStart(function () {
+                            $(this).show();
+                        })
+                        .ajaxStop(function () {
+                            $(this).hide();
+                        });
+
+            });
+            $("#btnLogin").click(function () {
+                var email = $("#email").val();
+                var password = $("#password").val();
+                $.get('http://localhost:4872/api/Accounts/Login', {email: email, password: password}, function (response) {
+
+                    if (response == false)
+                    {
+                        $(".messagediv").removeClass("hidden").addClass("alert-danger").children('strong').text("Username or password is wrong");
+                        $(".messagediv").prev().hide();
+                    } else if(response != false)
+                    {
+                        $(".messagediv").removeClass("hidden alert-danger").addClass("alert-success").children('strong').text("Welcome "+response.Name);
+                        $(".messagediv").prev().hide();
+                        $(".messagediv").next().hide();
+                    }
+                    
+                })
+            });
+
+        </script>
+    </body>
+</html>
